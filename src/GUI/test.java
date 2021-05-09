@@ -13,19 +13,21 @@ import java.awt.*;
 import java.awt.event.WindowEvent;  
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowListener; 
-
+import javax.swing.JTextField;
 public class test extends Frame{  
-    test(){  
+    test(){
+        Label b = new Label("HJel");
+        JTextField a = new JTextField("Hello",20);
+        this.add(a);
+        setSize(400,400);   
+        setVisible(true);  
         addWindowListener(new WindowAdapter(){  
             public void windowClosing(WindowEvent e) {  
                 dispose();  
             }  
         });  
-        setSize(400,400);  
-        setLayout(null);  
-        setVisible(true);  
     }  
     public static void main(String[] args) {  
-        new test();  
+        new test();
     }
 }
