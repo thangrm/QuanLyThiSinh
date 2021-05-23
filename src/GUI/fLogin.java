@@ -7,9 +7,6 @@
 
 
 package GUI;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-
 /**
  *
  * @author Moon
@@ -26,8 +23,8 @@ public class fLogin extends Frame {
     private Label lblPass;
     private Label lblShowPass;
     
-    private JTextField txtUser;
-    private JPasswordField txtPass;
+    private TextField txtUser;
+    private TextField txtPass;
     private Checkbox ckbshowPass;
     
     private Button btnLogin;
@@ -44,7 +41,6 @@ public class fLogin extends Frame {
     
     private void setUI()
     {   
-        this.setVisible(true);
         this.setSize(500, 380);
         this.setTitle("Đăng nhập");
         this.setLayout(new FlowLayout());
@@ -66,10 +62,10 @@ public class fLogin extends Frame {
         lblShowPass.setForeground(Color.white);
         lblShowPass.setFont(new Font("Verdana", Font.PLAIN, 12));
         
-        txtUser = new JTextField(15);
+        txtUser = new TextField(25);
         txtUser.setText("");
-        txtPass = new JPasswordField(15);
-        //txtPass.setEchoChar('*');
+        txtPass = new TextField(25);
+        txtPass.setEchoChar('*');
         ckbshowPass = new Checkbox();
         
         btnLogin = new Button("Đăng nhập");
