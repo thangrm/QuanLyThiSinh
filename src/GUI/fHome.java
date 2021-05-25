@@ -10,8 +10,12 @@ package GUI;
  * @author Moon
  */
 
+import DATABASE.SQLServer;
+import ENTITY.ThiSinh;
+import ENTITY.TuyenSinh;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Vector;
 
 public class fHome extends Frame {
 
@@ -31,9 +35,14 @@ public class fHome extends Frame {
         this.setTitle("Quản lý thí sinh");
         this.setLayout(new FlowLayout());
         //this.setBackground(new Color(50, 60, 82)); 
-        DataTable tb = new DataTable();
+        TuyenSinh tuyenSinh = new TuyenSinh(SQLServer.getThiSinh());
+        ThiSinh thiSinh = tuyenSinh.getListThiSinh().get(0);
+        Vector data = new Vector();
+        data = tuyenSinh.HienThi();
+        System.out.println(data.get(0));
+        DataTable tb = new DataTable(data);
         
-         panel = new Panel();
+        panel = new Panel();
         //panel.setPreferredSize(new Dimension(500, 280));
         layout = new GridBagLayout();
         panel.setLayout(layout);
@@ -44,7 +53,6 @@ public class fHome extends Frame {
         addComponent(tb, 0, 0, 1, 1, inset);
         
         this.add(panel);
-        
     }
     private void setEvent()
     {
@@ -55,63 +63,7 @@ public class fHome extends Frame {
             }  
         }); 
     } 
-    
-    private void renderTable(){
-        
-        TextField STT = new TextField(1);
-        STT.setText("#");
-        STT.setFocusable(false);
-        STT.setForeground(Color.white);
-        STT.setBackground(Color.red);
-        STT.setFont(new Font("Verdana", Font.BOLD, 12));
-        
-        TextField SBD = new TextField(12);
-        SBD.setText("Số báo danh");
-        SBD.setFocusable(false);
-        SBD.setForeground(Color.white);
-        SBD.setBackground(Color.red);
-        SBD.setFont(new Font("Verdana", Font.BOLD, 12));
-        
-        TextField hoTen = new TextField(20);
-        hoTen.setText("Họ và tên");
-        hoTen.setFocusable(false);
-        hoTen.setForeground(Color.white);
-        hoTen.setBackground(Color.red);
-        hoTen.setFont(new Font("Verdana", Font.BOLD, 12));
-        
-        
-        TextField diaChi = new TextField(25);
-        diaChi.setText("Địa chỉ");
-        diaChi.setFocusable(false);
-        diaChi.setForeground(Color.white);
-        diaChi.setBackground(Color.red);
-        diaChi.setFont(new Font("Verdana", Font.BOLD, 12));
-        
-        TextField khuVuc = new TextField(12);
-        khuVuc.setText("Khu vực ưu tiên");
-        khuVuc.setFocusable(false);
-        khuVuc.setForeground(Color.white);
-        khuVuc.setBackground(Color.red);
-        khuVuc.setFont(new Font("Verdana", Font.BOLD, 12));
-        
-        panel = new Panel();
-        //panel.setPreferredSize(new Dimension(500, 280));
-        layout = new GridBagLayout();
-        panel.setLayout(layout);
-        gbc = new GridBagConstraints();
-        
-        Insets inset = new Insets(10, 0, 10, 0);
-        gbc.fill = GridBagConstraints.CENTER;
-        addComponent(STT, 0, 0, 1, 1, inset);
-        addComponent(SBD, 1, 0, 1, 1, inset);
-        addComponent(hoTen, 2, 0, 1, 1, inset);
-        addComponent(diaChi, 3, 0, 1, 1, inset);
-        addComponent(khuVuc, 4, 0, 1, 1, inset);
-        
-        this.add(panel);
-        
-    }
-    
+  
     private void addComponent(Component component, int column,
             int row, int width, int height, Insets inset) {
         gbc.gridx = column;

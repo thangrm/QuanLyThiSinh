@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package THISINH;
+package ENTITY;
 
 /**
  *
  * @author Hoàng Thắng <hoangthangrm>
  */
-public class MON {
-    int maMon;
-    String tenMon;
+public class Mon {
+    protected int maMon;
+    protected String tenMon;
 
-    public MON(int maMon, String tenMon) {
+    public Mon(int maMon, String tenMon) {
         this.maMon = maMon;
         this.tenMon = tenMon;
     }
