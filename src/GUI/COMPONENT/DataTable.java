@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package GUI;
+package GUI.COMPONENT;
 
 import java.awt.Color;
 import java.awt.Panel;
@@ -20,12 +20,19 @@ import javax.swing.table.DefaultTableModel;
  */
 public class DataTable extends Panel {
 
-    private JTable table = new JTable();
+    public JTable table = new JTable(){  
+       public boolean isCellEditable(int row,int column){  
+         return false; 
+       }  
+     };
+    public DefaultTableModel model;
     
     public DataTable() {
         Vector data = new Vector();
         setData(data);
         this.add(new JScrollPane(table));
+        this.setEnabled(false);
+        this.setBackground(new Color(50, 60, 82));
     } 
     
     public DataTable(Vector data) {
@@ -33,7 +40,7 @@ public class DataTable extends Panel {
         this.add(new JScrollPane(table));
     }
     
-    public void setData(Vector data){
+    public void setData(Vector data){   
         Vector vctHeader = new Vector();
         vctHeader.add("STT");
         vctHeader.add("SBD");
@@ -51,8 +58,10 @@ public class DataTable extends Panel {
         vctHeader.add("Địa");
         vctHeader.add("Tổng điểm");
 
-        DefaultTableModel model = new DefaultTableModel(data, vctHeader);
-
+        model = new DefaultTableModel(data, vctHeader);
+        while(model.getRowCount() < 25)
+            model.addRow(new Vector<String>());
+        
         table.setModel(model);
         table.setShowGrid(true);
         table.setGridColor(Color.BLACK);
@@ -85,6 +94,12 @@ public class DataTable extends Panel {
         }
     }
     
+    public void updateTable(Vector data){
+        int row = table.getSelectedRow();
+        model.removeRow(row);
+        model.insertRow(row, data);
+        model.fireTableDataChanged();
+    }
     public static void main(String[] args) {
         DataTable m = new DataTable();
     }

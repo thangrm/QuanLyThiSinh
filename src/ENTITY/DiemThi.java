@@ -17,7 +17,12 @@ public class DiemThi {
         this.maMon = maMon;
         this.diem = diem;
     }
-
+    
+    public DiemThi(String maMon, String diem) {
+        this.maMon = maMon;
+        this.diem = Float.parseFloat(diem);
+    }
+    
     public String getMaMon() {
         return maMon;
     }

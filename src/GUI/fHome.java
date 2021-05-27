@@ -3,67 +3,156 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package GUI;
+
 /**
  *
- * @author Moon
+ * @author Hoàng Thắng <hoangthangrm>
  */
-
+import GUI.COMPONENT.DataTable;
+import GUI.COMPONENT.MenuBarUI;
+import GUI.COMPONENT.ToolBar;
 import DATABASE.SQLServer;
 import ENTITY.ThiSinh;
 import ENTITY.TuyenSinh;
+import LIB.Config;
 import java.awt.*;
+import java.awt.MenuBar;
 import java.awt.event.*;
 import java.util.Vector;
+import javax.swing.*;
 
-public class fHome extends Frame {
+public class fHome extends MenuBarUI {
 
-    private Panel panel;
-    
-    private GridBagLayout layout;
-    private GridBagConstraints gbc;
+    protected fHome home;
+    protected fSuaThiSinh formSuaThiSinh;
 
-    fHome() {
-       setUI();
-       setEvent();
+    protected TuyenSinh tuyenSinh;
+    protected DataTable tb;
+    protected Panel panel;
+    protected GridBagLayout layout;
+    protected GridBagConstraints gbc;
+
+    protected ToolBar toolBar;
+    protected Panel statusPanel;
+
+    public fHome() {
+        home = this;
+        setUI();
+        setEvent();
     }
-    
-    private void setUI()
-    {   
-        this.setSize(1200, 380);
+
+    private void setUI() {
+        this.setSize(1200, 600);
         this.setTitle("Quản lý thí sinh");
-        this.setLayout(new FlowLayout());
-        //this.setBackground(new Color(50, 60, 82)); 
-        TuyenSinh tuyenSinh = new TuyenSinh(SQLServer.getThiSinh());
-        ThiSinh thiSinh = tuyenSinh.getListThiSinh().get(0);
-        Vector data = new Vector();
-        data = tuyenSinh.HienThi();
-        System.out.println(data.get(0));
-        DataTable tb = new DataTable(data);
-        
+        this.setLayout(new BorderLayout());
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int) ((dimension.getWidth() - this.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - this.getHeight()) / 2);
+        this.setLocation(x, y);
+
+        Panel mainPanel = new Panel();
+        mainPanel.setLayout(new BorderLayout());
+
+        // Thanh công cụ
+        toolBar = new ToolBar();
+        mainPanel.add(toolBar, BorderLayout.NORTH);
+
+        //Hiển thị bảng danh sách thí sinh
+        tuyenSinh = new TuyenSinh();
+        Vector data = tuyenSinh.HienThi();
+        tb = new DataTable(data);
         panel = new Panel();
-        //panel.setPreferredSize(new Dimension(500, 280));
         layout = new GridBagLayout();
         panel.setLayout(layout);
         gbc = new GridBagConstraints();
-        
+
         Insets inset = new Insets(10, 0, 10, 0);
         gbc.fill = GridBagConstraints.CENTER;
         addComponent(tb, 0, 0, 1, 1, inset);
-        
-        this.add(panel);
+        mainPanel.add(panel, BorderLayout.SOUTH);
+        this.add(mainPanel);
+
+        //Thanh trạng thái
+        statusPanel = new Panel();
+        statusPanel.setBackground(Config.subColor);
+        statusPanel.setPreferredSize(new Dimension(this.getWidth(), 25));
+        statusPanel.setLayout(new BorderLayout());
+        Label statusLabel = new Label("status");
+        statusLabel.setForeground(Color.WHITE);
+        statusPanel.add(statusLabel, BorderLayout.WEST);
+        this.add(statusPanel, BorderLayout.SOUTH);
     }
-    private void setEvent()
-    {
+
+    private void setEvent() {
         // Sự kiện nút đóng window
-        this.addWindowListener(new WindowAdapter(){  
-            public void windowClosing(WindowEvent e) {  
-                dispose();  
-            }  
-        }); 
-    } 
-  
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                dispose();
+            }
+        });
+        
+        // Sự kiện thêm mới trên menuBar
+        menuItemHeThong1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                themThiSinh();
+            }
+        });
+        
+        // Sự kiện nút thêm mới trên thanh công cụ
+        toolBar.addBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                themThiSinh();
+            }
+        });
+
+        toolBar.updateBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = tb.table.getSelectedRow();
+                if (row < 0) {
+                    return;
+                }
+
+                String soBaoDanh = tb.table.getValueAt(row, 1).toString();
+                if (formSuaThiSinh == null) {
+                    formSuaThiSinh = new fSuaThiSinh(home);
+                    formSuaThiSinh.setVisible(true);
+                } else {
+                    formSuaThiSinh.setVisible(true);
+                    formSuaThiSinh.toFront();
+                }
+                formSuaThiSinh.layThongTinThiSinh(soBaoDanh);
+            }
+        });
+
+        toolBar.deleteBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        toolBar.searchBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+    }
+
+    public void themThiSinh() {
+        if (formThemThiSinh == null) {
+            formThemThiSinh = new fThemThiSinh(home);
+            formThemThiSinh.setVisible(true);
+        } else {
+            formThemThiSinh.setVisible(true);
+            formThemThiSinh.toFront();
+        }
+    }
+
     private void addComponent(Component component, int column,
             int row, int width, int height, Insets inset) {
         gbc.gridx = column;
@@ -75,8 +164,7 @@ public class fHome extends Frame {
         panel.add(component);
     }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         fHome home = new fHome();
         home.setVisible(true);
     }

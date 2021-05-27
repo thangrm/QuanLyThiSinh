@@ -76,19 +76,22 @@ public class ThiSinh {
     public void setListDiem(List<DiemThi> listDiem) {
         this.listDiem = listDiem;
     }
-
+    
     public String getDiemTheoMon(String maMon) {
-        String result = "-";
+        return this.getDiemTheoMon(maMon, "");
+    }
+    
+    public String getDiemTheoMon(String maMon, String str) {
         for (DiemThi diemThi : listDiem) {
             Float diem = diemThi.getDiem();
-            if (diemThi.getMaMon().equals(maMon)) {
+            if (diemThi.getMaMon().equalsIgnoreCase(maMon)) {
                 if((diem * 100) % 100 == 0)
-                    result =  String.format("%.0f",diem);
+                    str =  String.format("%.0f",diem);
                 else
-                    result = String.format("%.2f", diem);
+                    str = String.format("%.2f", diem);
             }
         }
-        return result;
+        return str;
     }
 
     public Float getTongDiem() {
@@ -98,5 +101,18 @@ public class ThiSinh {
         }
         tongDiem += this.khuVuc.getDiemUuTien();
         return tongDiem;
+    }
+    
+    public void show(){
+        System.out.println("SBD: "+ soBaoDanh);
+        System.out.println("Họ tên: "+ hoTen);
+        System.out.println("Địa chỉ: "+ diaChi);
+        System.out.println("Mã khu vực: "+ khuVuc.maKhuVuc);
+        System.out.println("Điểm ưu tiên: "+ khuVuc.maKhuVuc);
+        System.out.println("Mã khối thi: "+ khoiThi.maKhoi);
+        System.out.println("Tên khối: "+ khoiThi.tenKhoi);
+        for(DiemThi diem : listDiem){
+            System.out.println("Điểm môn " + diem.maMon + " : " + diem.diem);    
+        }
     }
 }
