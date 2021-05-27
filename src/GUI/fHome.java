@@ -16,6 +16,7 @@ import DATABASE.SQLServer;
 import ENTITY.ThiSinh;
 import ENTITY.TuyenSinh;
 import GUI.COMPONENT.DialogUI;
+import GUI.COMPONENT.PopupMenuListener;
 import LIB.Config;
 import java.awt.*;
 import java.awt.MenuBar;
@@ -59,6 +60,7 @@ public class fHome extends MenuBarUI {
 
         Panel mainPanel = new Panel();
         mainPanel.setLayout(new BorderLayout());
+        mainPanel.addMouseListener(new PopupMenuListener(home));
 
         // Thanh công cụ
         toolBar = new ToolBar();
@@ -67,7 +69,7 @@ public class fHome extends MenuBarUI {
         //Hiển thị bảng danh sách thí sinh
         tuyenSinh = new TuyenSinh();
         Vector data = tuyenSinh.HienThi();
-        tb = new DataTable(data);
+        tb = new DataTable(home, data);
         panel = new Panel();
         layout = new GridBagLayout();
         panel.setLayout(layout);
@@ -160,20 +162,7 @@ public class fHome extends MenuBarUI {
         toolBar.updateBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int row = tb.table.getSelectedRow();
-                if (row < 0) {
-                    return;
-                }
-
-                String soBaoDanh = tb.table.getValueAt(row, 1).toString();
-                if (formSuaThiSinh == null) {
-                    formSuaThiSinh = new fSuaThiSinh(home);
-                    formSuaThiSinh.setVisible(true);
-                } else {
-                    formSuaThiSinh.setVisible(true);
-                    formSuaThiSinh.toFront();
-                }
-                formSuaThiSinh.layThongTinThiSinh(soBaoDanh);
+                suaThongTinThiSinh();
             }
         });
 
@@ -181,13 +170,7 @@ public class fHome extends MenuBarUI {
         toolBar.deleteBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int row = tb.table.getSelectedRow();
-                if (row < 0) {
-                    return;
-                }
-                String soBaoDanh = tb.table.getValueAt(row, 1).toString();
-                formXacNhanXoa = new fXacNhanXoa(home, soBaoDanh);
-                formXacNhanXoa.setVisible(true);
+                xoaThongTinThiSinh();
             }
         });
 
@@ -195,8 +178,7 @@ public class fHome extends MenuBarUI {
         toolBar.searchBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                formTimKiem = new fTimKiem(home);
-                formTimKiem.setVisible(true);
+                timKiemThiSinh();
             }
         });
     }
@@ -209,6 +191,49 @@ public class fHome extends MenuBarUI {
             formThemThiSinh.setVisible(true);
             formThemThiSinh.toFront();
         }
+    }
+
+    public void suaThongTinThiSinh() {
+        int row = tb.table.getSelectedRow();
+        if (row < 0) {
+            return;
+        }
+        if (tb.table.getValueAt(row, 1) == null) {
+            return;
+        }
+        String soBaoDanh = tb.table.getValueAt(row, 1).toString();
+        if (soBaoDanh == null || soBaoDanh.equals("")) {
+            return;
+        }
+        if (formSuaThiSinh == null) {
+            formSuaThiSinh = new fSuaThiSinh(home);
+            formSuaThiSinh.setVisible(true);
+        } else {
+            formSuaThiSinh.setVisible(true);
+            formSuaThiSinh.toFront();
+        }
+        formSuaThiSinh.layThongTinThiSinh(soBaoDanh);
+    }
+
+    public void xoaThongTinThiSinh() {
+        int row = tb.table.getSelectedRow();
+        if (row < 0) {
+            return;
+        }
+        if (tb.table.getValueAt(row, 1) == null) {
+            return;
+        }
+        String soBaoDanh = tb.table.getValueAt(row, 1).toString();
+        if (soBaoDanh == null || soBaoDanh.equals("")) {
+            return;
+        }
+        formXacNhanXoa = new fXacNhanXoa(home, soBaoDanh);
+        formXacNhanXoa.setVisible(true);
+    }
+
+    public void timKiemThiSinh() {
+        formTimKiem = new fTimKiem(home);
+        formTimKiem.setVisible(true);
     }
 
     private void addComponent(Component component, int column,

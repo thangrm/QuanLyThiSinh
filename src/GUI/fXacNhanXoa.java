@@ -34,8 +34,9 @@ import java.awt.event.WindowEvent;
  * @author Hoàng Thắng <hoangthangrm>
  */
 public class fXacNhanXoa extends Dialog {
+
     private fHome home;
-   
+
     private String soBaoDanh;
     private String messager;
     private Panel panel;
@@ -81,7 +82,7 @@ public class fXacNhanXoa extends Dialog {
         btnCancel.setForeground(Config.textColor);
         btnCancel.setBackground(new Color(255, 77, 38));
         btnCancel.setFont(new Font("Verdana", Font.PLAIN, 16));
-        
+
         panelBtn = new Panel();
         panel = new Panel();
         layout = new GridBagLayout();
@@ -90,11 +91,11 @@ public class fXacNhanXoa extends Dialog {
         gbc = new GridBagConstraints();
         Insets inset = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.CENTER;
-        
+
         addComponent(panelBtn, btnSubmit, 0, 0, 1, 1, inset);
         addComponent(panelBtn, btnCancel, 1, 0, 1, 1, inset);
-        
-        addComponent(panel, iconAlert, 0, 0, 1, 1, inset);        
+
+        addComponent(panel, iconAlert, 0, 0, 1, 1, inset);
         addComponent(panel, lblMessager, 0, 1, 1, 1, inset);
         addComponent(panel, panelBtn, 0, 2, 1, 1, inset);
         this.add(panel);
@@ -115,10 +116,12 @@ public class fXacNhanXoa extends Dialog {
             public void actionPerformed(ActionEvent e) {
                 home.tuyenSinh.XoaThongTinThiSinh(soBaoDanh);
                 home.tb.removeRowSelected();
+                home.revalidate();
+                home.repaint();
                 dispose();
             }
         });
-        
+
         // Sự kiện nút hủy
         btnCancel.addActionListener(new ActionListener() {
             @Override

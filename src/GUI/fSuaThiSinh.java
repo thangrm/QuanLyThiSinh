@@ -23,6 +23,7 @@ import java.util.Vector;
 import javax.swing.*;
 
 public class fSuaThiSinh extends NhapThongTin {
+
     public fHome home;
     protected String soBaoDanh;
 
@@ -46,6 +47,8 @@ public class fSuaThiSinh extends NhapThongTin {
                 if (messager.equalsIgnoreCase("OK")) {
                     frame.dispose();
                     home.tb.updateTable(tuyenSinh.HienThiMotThiSinh(thiSinh));
+                    home.revalidate();
+                    home.repaint();
                     DialogUI d = new DialogUI(frame, "Thành công", "Sửa thông tin thí sinh thành công!", true, DialogUI.OK);
                     d.setVisible(true);
                 } else if (messager.equalsIgnoreCase("Error")) {
@@ -55,7 +58,7 @@ public class fSuaThiSinh extends NhapThongTin {
                     DialogUI d = new DialogUI(frame, "Thông báo", "Sửa không thành công. Vui lòng thử lại sau!", true, DialogUI.ALERT);
                     d.setVisible(true);
                 }
-                
+
             }
         });
     }

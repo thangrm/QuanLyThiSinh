@@ -5,6 +5,7 @@
  */
 package GUI.COMPONENT;
 
+import GUI.fHome;
 import java.awt.Color;
 import java.awt.Panel;
 import java.util.ArrayList;
@@ -19,28 +20,30 @@ import javax.swing.table.DefaultTableModel;
  * @author Hoàng Thắng <hoangthangrm>
  */
 public class DataTable extends Panel {
-
-    public JTable table = new JTable(){  
-       public boolean isCellEditable(int row,int column){  
-         return false; 
-       }  
-     };
+    protected fHome home;
+    public JTable table = new JTable() {
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
     public DefaultTableModel model;
-    
-    public DataTable() {
+
+    public DataTable(fHome home) {
+        this.home = home;
         Vector data = new Vector();
         setData(data);
         this.add(new JScrollPane(table));
-        this.setEnabled(false);
-        this.setBackground(new Color(50, 60, 82));
-    } 
-    
-    public DataTable(Vector data) {
+        table.addMouseListener(new PopupMenuListener(home));
+    }
+
+    public DataTable(fHome home, Vector data) {
+        this.home = home;
         setData(data);
         this.add(new JScrollPane(table));
+        table.addMouseListener(new PopupMenuListener(home));
     }
-    
-    public void setData(Vector data){   
+
+    public void setData(Vector data) {
         Vector vctHeader = new Vector();
         vctHeader.add("STT");
         vctHeader.add("SBD");
@@ -59,9 +62,10 @@ public class DataTable extends Panel {
         vctHeader.add("Tổng điểm");
 
         model = new DefaultTableModel(data, vctHeader);
-        while(model.getRowCount() < 25)
+        while (model.getRowCount() < 25) {
             model.addRow(new Vector<String>());
-        
+        }
+
         table.setModel(model);
         table.setShowGrid(true);
         table.setGridColor(Color.BLACK);
@@ -85,44 +89,43 @@ public class DataTable extends Panel {
         table.getColumnModel().getColumn(13).setPreferredWidth(38);
         table.getColumnModel().getColumn(14).setPreferredWidth(80);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-        
+
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
-        
-        for(int i = 4; i < 15; i++){
+
+        for (int i = 4; i < 15; i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
         this.setSTT();
     }
-    
-    public void addARow(Vector data){
+
+    public void addARow(Vector data) {
         model.insertRow(0, data);
-        model.removeRow(model.getRowCount()-1);
+        model.removeRow(model.getRowCount() - 1);
         this.setSTT();
     }
-    
-    public void updateTable(Vector data){
+
+    public void updateTable(Vector data) {
         int row = table.getSelectedRow();
         model.removeRow(row);
         model.insertRow(row, data);
         model.fireTableDataChanged();
         this.setSTT();
     }
-    
-    public void removeRowSelected(){
+
+    public void removeRowSelected() {
         int row = table.getSelectedRow();
         model.removeRow(row);
         model.addRow(new Vector());
         this.setSTT();
     }
-    
-    public void setSTT(){
-        for(int i = 0; i < model.getRowCount(); i++)
-        {
-            model.setValueAt(i+1, i, 0);
+
+    public void setSTT() {
+        for (int i = 0; i < model.getRowCount(); i++) {
+            model.setValueAt(i + 1, i, 0);
         }
-    }
-    public static void main(String[] args) {
-        DataTable m = new DataTable();
+        table.revalidate();
+        table.repaint();
+        table.addMouseListener(new PopupMenuListener(home));
     }
 }
