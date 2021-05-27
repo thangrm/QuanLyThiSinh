@@ -58,7 +58,7 @@ public class TuyenSinh {
 
     public Vector HienThiMotThiSinh(ThiSinh thisinh) {
         Vector row = new Vector();
-        row.add(1);
+        row.add("");
         row.add(thisinh.getSoBaoDanh());
         row.add(thisinh.getHoTen());
         row.add(thisinh.getDiaChi());
@@ -78,11 +78,8 @@ public class TuyenSinh {
 
     public Vector HienThi() {
         Vector data = new Vector();
-        int stt = 0;
         for (ThiSinh thiSinh : listThiSinh) {
-            stt++;
             Vector row = this.HienThiMotThiSinh(thiSinh);
-            row.set(0, stt);
             data.add(row);
         }
         return data;
@@ -104,6 +101,16 @@ public class TuyenSinh {
         {
             if(listThiSinh.get(i).getSoBaoDanh().equalsIgnoreCase(thiSinh.getSoBaoDanh()))
                 listThiSinh.set(i, thiSinh);
+        }
+        return messager;
+    }
+    
+    public String XoaThongTinThiSinh(String soBaoDanh) {
+        String messager = SQLServer.xoaThiSinh(soBaoDanh);
+        for(int i = 0; i < listThiSinh.size(); i++)
+        {
+            if(listThiSinh.get(i).getSoBaoDanh().equalsIgnoreCase(soBaoDanh))
+                listThiSinh.remove(i);
         }
         return messager;
     }

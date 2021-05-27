@@ -359,6 +359,12 @@ public class NhapThongTin extends Frame {
             d.setVisible(true);
             return null;
         }
+        
+        if (SBD.length() > 10) {
+            DialogUI d = new DialogUI(frame, "Thông báo", "Số báo danh tối đa là 10 kí tự", true, DialogUI.ALERT);
+            d.setVisible(true);
+            return null;
+        }
 
         if (hoTen == null || hoTen.equals("")) {
             DialogUI d = new DialogUI(frame, "Thông báo", "Họ tên không được để trống", true, DialogUI.ALERT);

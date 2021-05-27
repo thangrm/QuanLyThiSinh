@@ -92,6 +92,13 @@ public class DataTable extends Panel {
         for(int i = 4; i < 15; i++){
             table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
+        this.setSTT();
+    }
+    
+    public void addARow(Vector data){
+        model.insertRow(0, data);
+        model.removeRow(model.getRowCount()-1);
+        this.setSTT();
     }
     
     public void updateTable(Vector data){
@@ -99,6 +106,21 @@ public class DataTable extends Panel {
         model.removeRow(row);
         model.insertRow(row, data);
         model.fireTableDataChanged();
+        this.setSTT();
+    }
+    
+    public void removeRowSelected(){
+        int row = table.getSelectedRow();
+        model.removeRow(row);
+        model.addRow(new Vector());
+        this.setSTT();
+    }
+    
+    public void setSTT(){
+        for(int i = 0; i < model.getRowCount(); i++)
+        {
+            model.setValueAt(i+1, i, 0);
+        }
     }
     public static void main(String[] args) {
         DataTable m = new DataTable();

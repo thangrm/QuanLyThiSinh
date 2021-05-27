@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package GUI.COMPONENT;
+package GUI;
 
+import ENTITY.TuyenSinh;
+import GUI.COMPONENT.DialogUI;
+import GUI.COMPONENT.ImageUI;
 import LIB.Config;
 import java.awt.Button;
 import java.awt.Color;
@@ -30,44 +33,36 @@ import java.awt.event.WindowEvent;
  *
  * @author Hoàng Thắng <hoangthangrm>
  */
-public class DialogUI extends Dialog {
-
-    public static int ALERT = 1;
-    public static int OK = 2;
-
-    private int type;
+public class fXacNhanXoa extends Dialog {
+    private fHome home;
+   
+    private String soBaoDanh;
     private String messager;
     private Panel panel;
+    private Panel panelBtn;
     private Button btnSubmit;
+    private Button btnCancel;
     private GridBagLayout layout;
     private GridBagConstraints gbc;
 
-    public DialogUI(Frame owner, String title, String messager, boolean modal, int type) {
-        super(owner, title, modal);
-        this.messager = messager;
-        this.type = type;
+    public fXacNhanXoa(fHome owner, String soBaoDanh) {
+        super(owner, "Xác nhận", true);
+        this.messager = "Bạn có muốn xóa thí sinh có số báo danh : " + soBaoDanh;
+        this.soBaoDanh = soBaoDanh;
+        this.home = owner;
         setUI();
         setEvent();
     }
 
     private void setUI() {
         this.setBackground(Config.mainColor);
-        this.setSize(380, 300);
+        this.setSize(450, 300);
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (int) ((dimension.getWidth() - this.getWidth()) / 2);
         int y = (int) ((dimension.getHeight() - this.getHeight()) / 2);
         this.setLocation(x, y);
 
-        String pathFolder = System.getProperty("user.dir") + "\\src\\IMAGE\\";
-        String path;
-        if (this.type == DialogUI.ALERT) {
-            path = pathFolder + "alert.png";
-        } else if (this.type == DialogUI.OK) {
-            path = pathFolder + "ok.png";
-        } else {
-            path = pathFolder + "ok.png";
-        }
-
+        String path = System.getProperty("user.dir") + "\\src\\IMAGE\\alert.png";
         ImageUI iconAlert = new ImageUI(path);
         iconAlert.setPreferredSize(new Dimension(32, 32));
 
@@ -75,27 +70,33 @@ public class DialogUI extends Dialog {
         lblMessager.setForeground(Config.textColor);
         lblMessager.setFont(new Font("Verdana", Font.PLAIN, 16));
 
-        btnSubmit = new Button("OK");
-        btnSubmit.setPreferredSize(new Dimension(150, 30));
+        btnSubmit = new Button("Xác nhận");
+        btnSubmit.setPreferredSize(new Dimension(100, 35));
         btnSubmit.setForeground(Config.textColor);
-        if (this.type == DialogUI.ALERT) {
-            btnSubmit.setBackground(new Color(225, 65, 65));
-        } else if (this.type == DialogUI.OK) {
-            btnSubmit.setBackground(new Color(34, 181, 115));
-        } else {
-            btnSubmit.setBackground(new Color(34, 181, 115));
-        }
+        btnSubmit.setBackground(new Color(50, 174, 254));
         btnSubmit.setFont(new Font("Verdana", Font.PLAIN, 16));
 
+        btnCancel = new Button("Hủy");
+        btnCancel.setPreferredSize(new Dimension(80, 35));
+        btnCancel.setForeground(Config.textColor);
+        btnCancel.setBackground(new Color(255, 77, 38));
+        btnCancel.setFont(new Font("Verdana", Font.PLAIN, 16));
+        
+        panelBtn = new Panel();
         panel = new Panel();
         layout = new GridBagLayout();
+        panelBtn.setLayout(layout);
         panel.setLayout(layout);
         gbc = new GridBagConstraints();
         Insets inset = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.CENTER;
-        addComponent(panel, iconAlert, 0, 0, 1, 1, inset);
+        
+        addComponent(panelBtn, btnSubmit, 0, 0, 1, 1, inset);
+        addComponent(panelBtn, btnCancel, 1, 0, 1, 1, inset);
+        
+        addComponent(panel, iconAlert, 0, 0, 1, 1, inset);        
         addComponent(panel, lblMessager, 0, 1, 1, 1, inset);
-        addComponent(panel, btnSubmit, 0, 2, 1, 1, inset);
+        addComponent(panel, panelBtn, 0, 2, 1, 1, inset);
         this.add(panel);
     }
 
@@ -108,11 +109,20 @@ public class DialogUI extends Dialog {
             }
         });
 
-        // Sự kiện nút OK
+        // Sự kiện nút xác nhận
         btnSubmit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(".actionPerformed()");
+                home.tuyenSinh.XoaThongTinThiSinh(soBaoDanh);
+                home.tb.removeRowSelected();
+                dispose();
+            }
+        });
+        
+        // Sự kiện nút hủy
+        btnCancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 dispose();
             }
         });
@@ -130,14 +140,14 @@ public class DialogUI extends Dialog {
     }
 
     public static void main(String[] args) {
-        Frame a = new Frame();
+        fHome a = new fHome();
         a.setVisible(true);
         a.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 a.dispose();
             }
         });
-        DialogUI dialog = new DialogUI(a, "Lỗi", "Vui lòng nhập đầy đủ thông tin", true, DialogUI.ALERT);
+        fXacNhanXoa dialog = new fXacNhanXoa(a, "123456");
         dialog.setVisible(true);
     }
 }

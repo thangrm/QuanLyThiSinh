@@ -23,12 +23,12 @@ import java.util.Vector;
 import javax.swing.*;
 
 public class fSuaThiSinh extends NhapThongTin {
-    public Frame parent;
+    public fHome home;
     protected String soBaoDanh;
 
-    public fSuaThiSinh(fHome parent) {
+    public fSuaThiSinh(fHome home) {
         super();
-        this.parent = parent;
+        this.home = home;
         this.frame.setTitle("Sửa thông tin thí sinh");
         this.lblTitle.setText("Chỉnh sửa thông tin thí sinh");
         this.txtSBD.setEnabled(false);
@@ -44,8 +44,8 @@ public class fSuaThiSinh extends NhapThongTin {
                 }
                 String messager = tuyenSinh.SuaThongTinThiSinh(thiSinh);
                 if (messager.equalsIgnoreCase("OK")) {
-                    frame.setVisible(false);
-                    parent.tb.updateTable(tuyenSinh.HienThiMotThiSinh(thiSinh));
+                    frame.dispose();
+                    home.tb.updateTable(tuyenSinh.HienThiMotThiSinh(thiSinh));
                     DialogUI d = new DialogUI(frame, "Thành công", "Sửa thông tin thí sinh thành công!", true, DialogUI.OK);
                     d.setVisible(true);
                 } else if (messager.equalsIgnoreCase("Error")) {

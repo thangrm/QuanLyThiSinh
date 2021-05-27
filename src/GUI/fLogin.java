@@ -9,12 +9,24 @@ package GUI;
  *
  * @author Moon
  */
-
+import ENTITY.TaiKhoan;
+import GUI.COMPONENT.DialogUI;
 import LIB.Config;
 import java.awt.*;
+import java.util.List;
 import java.awt.event.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 public class fLogin extends Frame {
+
+    private fLogin login;
+
+    private List<TaiKhoan> listTaiKhoan;
     private Label lblTitle;
     private Label lblUser;
     private Label lblPass;
@@ -31,9 +43,11 @@ public class fLogin extends Frame {
     private GridBagLayout layout;
     private GridBagConstraints gbc;
 
-    public fLogin() {
+    public fLogin() throws IOException, ClassNotFoundException {
         setUI();
         setEvent();
+        this.login = this;
+        this.listTaiKhoan = readFile();
     }
 
     private void setUI() {
@@ -45,7 +59,7 @@ public class fLogin extends Frame {
         int x = (int) ((dimension.getWidth() - this.getWidth()) / 2);
         int y = (int) ((dimension.getHeight() - this.getHeight()) / 2);
         this.setLocation(x, y);
-        
+
         lblTitle = new Label("   ĐĂNG NHẬP");
         lblTitle.setForeground(Config.textColor);
         lblTitle.setFont(new Font("Verdana", Font.BOLD, 28));
@@ -133,8 +147,18 @@ public class fLogin extends Frame {
         btnLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.err.println("\nTài khoản: " + txtUser.getText());
-                System.err.println("\nMật khẩu: " + txtPass.getText());
+                String user = txtUser.getText();
+                String pass = txtPass.getText();
+                for (TaiKhoan tk : listTaiKhoan) {
+                    if (user.equalsIgnoreCase(tk.getUsername()) && pass.equals(tk.getPassword())) {
+                        fHome home = new fHome();
+                        home.setVisible(true);
+                        login.dispose();
+                        return;
+                    }
+                }
+                DialogUI d = new DialogUI(login, "Thông báo", "Tài khoản mật khẩu không chính xác", true, DialogUI.ALERT);
+                d.setVisible(true);
             }
         });
 
@@ -158,8 +182,47 @@ public class fLogin extends Frame {
         panel.add(component);
     }
 
-    public static void main(String[] args) {
+    private void saveFile(List<TaiKhoan> listTaiKhoan) throws IOException {
+        String path = System.getProperty("user.dir") + "\\src\\DATABASE\\account.dat";
+
+        ObjectOutputStream os = null;
+        try {
+            os = new ObjectOutputStream(new FileOutputStream(path));
+            os.writeObject(listTaiKhoan);
+            System.out.println("Success...");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            os.close();
+        }
+    }
+
+    private List<TaiKhoan> readFile() throws IOException, ClassNotFoundException {
+        String path = System.getProperty("user.dir") + "\\src\\DATABASE\\account.dat";
+        List<TaiKhoan> listTaiKhoan;
+        ObjectInputStream os = null;
+        try {
+            os = new ObjectInputStream(new FileInputStream(path));
+            listTaiKhoan = (List<TaiKhoan>) os.readObject();
+            return listTaiKhoan;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        } finally {
+            os.close();
+        }
+    }
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         fLogin login = new fLogin();
         login.setVisible(true);
+//        TaiKhoan taiKhoan = new TaiKhoan(); // tao doi tuong myStudent
+//        List<TaiKhoan> listTaiKhoan = new ArrayList<>();
+//        TaiKhoan tk1 = new TaiKhoan("admin", "admin");
+//        TaiKhoan tk2 = new TaiKhoan("thang", "1811");
+//
+//        listTaiKhoan.add(tk1);
+//        listTaiKhoan.add(tk2);
+//        login.saveFile(listTaiKhoan);
     }
 }

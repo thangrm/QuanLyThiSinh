@@ -15,17 +15,23 @@ import GUI.COMPONENT.ToolBar;
 import DATABASE.SQLServer;
 import ENTITY.ThiSinh;
 import ENTITY.TuyenSinh;
+import GUI.COMPONENT.DialogUI;
 import LIB.Config;
 import java.awt.*;
 import java.awt.MenuBar;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 public class fHome extends MenuBarUI {
 
     protected fHome home;
     protected fSuaThiSinh formSuaThiSinh;
+    protected fXacNhanXoa formXacNhanXoa;
+    protected fTimKiem formTimKiem;
 
     protected TuyenSinh tuyenSinh;
     protected DataTable tb;
@@ -91,7 +97,7 @@ public class fHome extends MenuBarUI {
                 dispose();
             }
         });
-        
+
         // Sự kiện thêm mới trên menuBar
         menuItemHeThong1.addActionListener(new ActionListener() {
             @Override
@@ -99,7 +105,49 @@ public class fHome extends MenuBarUI {
                 themThiSinh();
             }
         });
-        
+
+        // Sự kiện đăng xuất
+        menuItemHeThong2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                fLogin login = null;
+                try {
+                    login = new fLogin();
+                } catch (IOException ex) {
+                    Logger.getLogger(fHome.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(fHome.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                login.setVisible(true);
+            }
+        });
+
+        // Sự kiện thoát
+        menuItemHeThong3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+
+        //Sự kiện tra cứu
+        menuItemTraCuu1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                formTimKiem = new fTimKiem(home);
+                formTimKiem.setVisible(true);
+            }
+        });
+
+        // Sự kiện hiển thị thông tin phiên bản
+        menuItemThongTin1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DialogUI d = new DialogUI(home, "Thông tin", "Nhóm 5 - Version: v1.0.0.", true, DialogUI.OK);
+                d.setVisible(true);
+            }
+        });
         // Sự kiện nút thêm mới trên thanh công cụ
         toolBar.addBtn.addActionListener(new ActionListener() {
             @Override
@@ -108,6 +156,7 @@ public class fHome extends MenuBarUI {
             }
         });
 
+        // Sự kiện nút sửa trên thanh công cụ
         toolBar.updateBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -128,17 +177,26 @@ public class fHome extends MenuBarUI {
             }
         });
 
+        // Sự kiện nút xóa trên thanh công cụ
         toolBar.deleteBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                int row = tb.table.getSelectedRow();
+                if (row < 0) {
+                    return;
+                }
+                String soBaoDanh = tb.table.getValueAt(row, 1).toString();
+                formXacNhanXoa = new fXacNhanXoa(home, soBaoDanh);
+                formXacNhanXoa.setVisible(true);
             }
         });
 
+        // Sự kiện nút tìm kiếm trên thanh công cụ
         toolBar.searchBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+                formTimKiem = new fTimKiem(home);
+                formTimKiem.setVisible(true);
             }
         });
     }

@@ -69,6 +69,7 @@ public class SQLServer {
                 conn.close();
                 return thiSinh;
             }
+            return null;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -264,19 +265,19 @@ public class SQLServer {
         }
     }
     
-    public static String xoaThiString(ThiSinh thisinh) {
+    public static String xoaThiSinh(String soBaoDanh) {
         try {
             // connnect to database
             Connection conn = getConnection(DB_URL, USER_NAME, PASSWORD);
             
             // Xóa điểm thi của thi sinh
             PreparedStatement ps = conn.prepareStatement("DELETE FROM diemthi WHERE soBaoDanh = ?");
-            ps.setString(1, thisinh.getSoBaoDanh());
+            ps.setString(1, soBaoDanh);
             ps.execute();
             
             // Xóa thông tin của thí sinh
             ps = conn.prepareStatement("DELETE FROM thisinh WHERE soBaoDanh = ?");
-            ps.setString(1, thisinh.getSoBaoDanh());
+            ps.setString(1, soBaoDanh);
             ps.execute();
 
             conn.close();

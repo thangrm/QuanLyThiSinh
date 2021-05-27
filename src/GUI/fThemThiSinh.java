@@ -8,7 +8,6 @@ package GUI;
 import GUI.COMPONENT.NhapThongTin;
 import GUI.COMPONENT.DialogUI;
 import ENTITY.ThiSinh;
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,9 +16,13 @@ import java.awt.event.ActionListener;
  * @author Hoàng Thắng <hoangthangrm>
  */
 public class fThemThiSinh extends NhapThongTin {
-
-    public fThemThiSinh(Frame parent) {
+    private fThemThiSinh formThemThiSinh;
+    private fHome home;
+    
+    public fThemThiSinh(fHome home) {
         super();
+        this.formThemThiSinh = this;
+        this.home = home;
         this.lblTitle.setText("Thêm thông tin thí sinh mới");
         this.btnSubmit.setLabel("Thêm mới");
 
@@ -33,6 +36,8 @@ public class fThemThiSinh extends NhapThongTin {
                 }
                 String messager = tuyenSinh.NhapThongTinThiSinh(thiSinh);
                 if (messager.equalsIgnoreCase("OK")) {
+                    formThemThiSinh.dispose();
+                    home.tb.addARow(tuyenSinh.HienThiMotThiSinh(thiSinh));
                     DialogUI d = new DialogUI(frame, "Thành công", "Thêm thí sinh mới thành công!", true, DialogUI.OK);
                     d.setVisible(true);
                 } else if (messager.equalsIgnoreCase("Duplicate entry")) {
@@ -42,7 +47,6 @@ public class fThemThiSinh extends NhapThongTin {
                     DialogUI d = new DialogUI(frame, "Thông báo", "Thêm không thành công. Vui lòng thử lại sau!", true, DialogUI.ALERT);
                     d.setVisible(true);
                 }
-
             }
         });
 

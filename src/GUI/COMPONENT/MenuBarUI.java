@@ -31,9 +31,7 @@ public class MenuBarUI extends JFrame {
     protected JMenuItem menuItemHeThong2 = new JMenuItem("Đăng xuất");
     protected JMenuItem menuItemHeThong3 = new JMenuItem("Thoát");
     protected JMenuItem menuItemTraCuu1 = new JMenuItem("Theo SBD");
-    protected JMenuItem menuItemTraCuu2 = new JMenuItem("Theo tên");
-    protected JMenuItem menuItemThongTin1 = new JMenuItem("Trợ giúp");
-    protected JMenuItem menuItemThongTin2 = new JMenuItem("Phiên bản");
+    protected JMenuItem menuItemThongTin1 = new JMenuItem("Phiên bản");
 
     public MenuBarUI() {
         setUI();
@@ -56,14 +54,11 @@ public class MenuBarUI extends JFrame {
         menuTraCuu.setMnemonic('T');
         menuTraCuu.setForeground(Config.textSubColor);
         menuItemTraCuu1.setAccelerator(KeyStroke.getKeyStroke('F', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        menuItemTraCuu2.setAccelerator(KeyStroke.getKeyStroke('H', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         menuTraCuu.add(menuItemTraCuu1);
-        menuTraCuu.add(menuItemTraCuu2);
 
         menuThongTin.setMnemonic('A');
         menuThongTin.setForeground(Config.textSubColor);
         menuThongTin.add(menuItemThongTin1);
-        menuThongTin.add(menuItemThongTin2);
 
         menuBar.add(menuHeThong);
         menuBar.add(menuTraCuu);
