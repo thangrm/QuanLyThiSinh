@@ -353,13 +353,13 @@ public class NhapThongTin extends Frame {
         String diemSu = txtSu.getText().trim();
         String diemDia = txtDia.getText().trim();
         List<DiemThi> listDiem = new ArrayList<>();
-        
+
         if (SBD == null || SBD.equals("")) {
             DialogUI d = new DialogUI(frame, "Thông báo", "Số báo danh không được để trống", true, DialogUI.ALERT);
             d.setVisible(true);
             return null;
         }
-        
+
         if (SBD.length() > 10) {
             DialogUI d = new DialogUI(frame, "Thông báo", "Số báo danh tối đa là 10 kí tự", true, DialogUI.ALERT);
             d.setVisible(true);

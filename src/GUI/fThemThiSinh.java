@@ -16,9 +16,10 @@ import java.awt.event.ActionListener;
  * @author Hoàng Thắng <hoangthangrm>
  */
 public class fThemThiSinh extends NhapThongTin {
+
     private fThemThiSinh formThemThiSinh;
     private fHome home;
-    
+
     public fThemThiSinh(fHome home) {
         super();
         this.formThemThiSinh = this;
@@ -38,8 +39,6 @@ public class fThemThiSinh extends NhapThongTin {
                 if (messager.equalsIgnoreCase("OK")) {
                     formThemThiSinh.dispose();
                     home.tb.addARow(tuyenSinh.HienThiMotThiSinh(thiSinh));
-                    home.revalidate();
-                    home.repaint();
                     DialogUI d = new DialogUI(frame, "Thành công", "Thêm thí sinh mới thành công!", true, DialogUI.OK);
                     d.setVisible(true);
                 } else if (messager.equalsIgnoreCase("Duplicate entry")) {
@@ -52,5 +51,18 @@ public class fThemThiSinh extends NhapThongTin {
             }
         });
 
+    }
+
+    public void resetData() {
+        txtSBD.setText("");
+        txtHoTen.setText("");
+        txtDiaChi.setText("");
+        txtToan.setText("");
+        txtLy.setText("");
+        txtHoa.setText("");
+        txtSinh.setText("");
+        txtVan.setText("");
+        txtSu.setText("");
+        txtDia.setText("");
     }
 }

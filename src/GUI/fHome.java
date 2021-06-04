@@ -12,20 +12,14 @@ package GUI;
 import GUI.COMPONENT.DataTable;
 import GUI.COMPONENT.MenuBarUI;
 import GUI.COMPONENT.ToolBar;
-import DATABASE.SQLServer;
-import ENTITY.ThiSinh;
 import ENTITY.TuyenSinh;
 import GUI.COMPONENT.DialogUI;
 import GUI.COMPONENT.PopupMenuListener;
 import LIB.Config;
 import java.awt.*;
-import java.awt.MenuBar;
 import java.awt.event.*;
-import java.io.IOException;
+import java.util.Date;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.*;
 
 public class fHome extends MenuBarUI {
 
@@ -39,6 +33,8 @@ public class fHome extends MenuBarUI {
     protected Panel panel;
     protected GridBagLayout layout;
     protected GridBagConstraints gbc;
+    protected TextField txtLocTen;
+    protected Button btnLocTen;
 
     protected ToolBar toolBar;
     protected Panel statusPanel;
@@ -66,29 +62,48 @@ public class fHome extends MenuBarUI {
         toolBar = new ToolBar();
         mainPanel.add(toolBar, BorderLayout.NORTH);
 
-        //Hiển thị bảng danh sách thí sinh
-        tuyenSinh = new TuyenSinh();
-        Vector data = tuyenSinh.HienThi();
-        tb = new DataTable(home, data);
         panel = new Panel();
         layout = new GridBagLayout();
         panel.setLayout(layout);
-        gbc = new GridBagConstraints();
-
         Insets inset = new Insets(10, 0, 10, 0);
+        gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.CENTER;
-        addComponent(tb, 0, 0, 1, 1, inset);
+
+        //Hiển thị bảng danh sách thí sinh
+        Label lblTimKiem = new Label("Tên: ");
+        lblTimKiem.setForeground(Config.textColor);
+        lblTimKiem.setFont(new Font("Verdana", Font.PLAIN, 16));
+        txtLocTen = new TextField(25);
+
+        btnLocTen = new Button("Lọc");
+        btnLocTen.setPreferredSize(new Dimension(80, 25));
+        btnLocTen.setForeground(Config.textColor);
+        btnLocTen.setBackground(new Color(50, 174, 254));
+
+        tuyenSinh = new TuyenSinh();
+        Vector data = tuyenSinh.HienThi();
+        tb = new DataTable(home, data);
+        Panel panelSearch = new Panel();
+
+        addComponent(panelSearch, lblTimKiem, 0, 0, 1, 1, inset);
+        addComponent(panelSearch, txtLocTen, 1, 0, 1, 1, inset);
+        addComponent(panelSearch, btnLocTen, 2, 0, 1, 1, inset);
+        inset = new Insets(0, 0, 0, 0);
+        addComponent(panel, panelSearch, 0, 0, 1, 1, inset);
+        addComponent(panel, tb, 0, 1, 1, 1, inset);
         mainPanel.add(panel, BorderLayout.SOUTH);
         this.add(mainPanel);
 
         //Thanh trạng thái
+        Date date = new Date();
+        String today = String.format("%1$s %2$tB %2$td, %2$tY", "", date);
         statusPanel = new Panel();
         statusPanel.setBackground(Config.subColor);
         statusPanel.setPreferredSize(new Dimension(this.getWidth(), 25));
         statusPanel.setLayout(new BorderLayout());
-        Label statusLabel = new Label("status");
+        Label statusLabel = new Label(today);
         statusLabel.setForeground(Color.WHITE);
-        statusPanel.add(statusLabel, BorderLayout.WEST);
+        statusPanel.add(statusLabel, BorderLayout.EAST);
         this.add(statusPanel, BorderLayout.SOUTH);
     }
 
@@ -99,7 +114,11 @@ public class fHome extends MenuBarUI {
                 dispose();
             }
         });
-
+        
+        /*====================*/
+        /*===== MENU BAR =====*/
+        /*====================*/
+        
         // Sự kiện thêm mới trên menuBar
         menuItemHeThong1.addActionListener(new ActionListener() {
             @Override
@@ -107,26 +126,30 @@ public class fHome extends MenuBarUI {
                 themThiSinh();
             }
         });
-
-        // Sự kiện đăng xuất
+        
+        // Sự kiện đổi mật khẩu
         menuItemHeThong2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                fDoiMatKhau formDoiMatKhau = new fDoiMatKhau(home);
+                formDoiMatKhau.setVisible(true);
+            }
+        });
+        
+        // Sự kiện đăng nhập - đăng xuất
+        menuItemHeThong3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Config.taiKhoan = null;
+                Config.isLogin = false;
                 fLogin login = null;
-                try {
-                    login = new fLogin();
-                } catch (IOException ex) {
-                    Logger.getLogger(fHome.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(fHome.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                login = new fLogin(home);
                 login.setVisible(true);
             }
         });
 
         // Sự kiện thoát
-        menuItemHeThong3.addActionListener(new ActionListener() {
+        menuItemHeThong4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
@@ -150,6 +173,11 @@ public class fHome extends MenuBarUI {
                 d.setVisible(true);
             }
         });
+        
+        /*=========================*/
+        /*===== THANH CÔNG CỤ =====*/
+        /*=========================*/
+        
         // Sự kiện nút thêm mới trên thanh công cụ
         toolBar.addBtn.addActionListener(new ActionListener() {
             @Override
@@ -181,6 +209,18 @@ public class fHome extends MenuBarUI {
                 timKiemThiSinh();
             }
         });
+
+        // Sự kiện nút lọc theo tên
+        btnLocTen.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tuyenSinh.TimKiemTheoTen(txtLocTen.getText());
+                Vector data = tuyenSinh.HienThi();
+                tb.setData(data);
+                menuBar.revalidate();
+                menuBar.repaint();
+            }
+        });
     }
 
     public void themThiSinh() {
@@ -188,6 +228,7 @@ public class fHome extends MenuBarUI {
             formThemThiSinh = new fThemThiSinh(home);
             formThemThiSinh.setVisible(true);
         } else {
+            formThemThiSinh.resetData();
             formThemThiSinh.setVisible(true);
             formThemThiSinh.toFront();
         }
@@ -236,7 +277,7 @@ public class fHome extends MenuBarUI {
         formTimKiem.setVisible(true);
     }
 
-    private void addComponent(Component component, int column,
+    private void addComponent(Panel panel, Component component, int column,
             int row, int width, int height, Insets inset) {
         gbc.gridx = column;
         gbc.gridy = row;

@@ -20,6 +20,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Hoàng Thắng <hoangthangrm>
  */
 public class DataTable extends Panel {
+
     protected fHome home;
     public JTable table = new JTable() {
         public boolean isCellEditable(int row, int column) {
@@ -109,7 +110,6 @@ public class DataTable extends Panel {
         int row = table.getSelectedRow();
         model.removeRow(row);
         model.insertRow(row, data);
-        model.fireTableDataChanged();
         this.setSTT();
     }
 
@@ -124,8 +124,11 @@ public class DataTable extends Panel {
         for (int i = 0; i < model.getRowCount(); i++) {
             model.setValueAt(i + 1, i, 0);
         }
+        model.fireTableDataChanged();
         table.revalidate();
         table.repaint();
         table.addMouseListener(new PopupMenuListener(home));
+        home.revalidate();
+        home.repaint();
     }
 }

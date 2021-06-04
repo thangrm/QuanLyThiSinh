@@ -9,24 +9,19 @@ package GUI;
  *
  * @author Moon
  */
+import ENTITY.QuanLyTaiKhoan;
 import ENTITY.TaiKhoan;
 import GUI.COMPONENT.DialogUI;
 import LIB.Config;
 import java.awt.*;
 import java.util.List;
 import java.awt.event.*;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 
 public class fLogin extends Frame {
 
     private fLogin login;
+    private fHome home;
 
-    private List<TaiKhoan> listTaiKhoan;
     private Label lblTitle;
     private Label lblUser;
     private Label lblPass;
@@ -43,11 +38,14 @@ public class fLogin extends Frame {
     private GridBagLayout layout;
     private GridBagConstraints gbc;
 
-    public fLogin() throws IOException, ClassNotFoundException {
+    public fLogin(fHome home) {
+        this.login = this;
+        this.home = home;
+        if (Config.qlTaiKhoan == null) {
+            Config.qlTaiKhoan = new QuanLyTaiKhoan();
+        }
         setUI();
         setEvent();
-        this.login = this;
-        this.listTaiKhoan = readFile();
     }
 
     private void setUI() {
@@ -128,6 +126,9 @@ public class fLogin extends Frame {
         // Sự kiện nút đóng window
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
+                home.dispose();
+                home = new fHome();
+                home.setVisible(true);
                 dispose();
             }
         });
@@ -147,18 +148,7 @@ public class fLogin extends Frame {
         btnLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String user = txtUser.getText();
-                String pass = txtPass.getText();
-                for (TaiKhoan tk : listTaiKhoan) {
-                    if (user.equalsIgnoreCase(tk.getUsername()) && pass.equals(tk.getPassword())) {
-                        fHome home = new fHome();
-                        home.setVisible(true);
-                        login.dispose();
-                        return;
-                    }
-                }
-                DialogUI d = new DialogUI(login, "Thông báo", "Tài khoản mật khẩu không chính xác", true, DialogUI.ALERT);
-                d.setVisible(true);
+                eventLogin();
             }
         });
 
@@ -166,9 +156,29 @@ public class fLogin extends Frame {
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                home.dispose();
+                home = new fHome();
+                home.setVisible(true);
                 dispose();
             }
         });
+    }
+
+    public void eventLogin() {
+        String user = txtUser.getText();
+        String pass = txtPass.getText();
+        TaiKhoan tk = Config.qlTaiKhoan.login(user, pass);
+        if (tk == null) {
+            DialogUI d = new DialogUI(login, "Thông báo", "Tài khoản mật khẩu không chính xác", true, DialogUI.ALERT);
+            d.setVisible(true);
+        } else {
+            Config.taiKhoan = tk;
+            Config.isLogin = true;
+            home.dispose();
+            home = new fHome();
+            home.setVisible(true);
+            dispose();
+        }
     }
 
     private void addComponent(Component component, int column,
@@ -182,47 +192,10 @@ public class fLogin extends Frame {
         panel.add(component);
     }
 
-    private void saveFile(List<TaiKhoan> listTaiKhoan) throws IOException {
-        String path = System.getProperty("user.dir") + "\\src\\DATABASE\\account.dat";
-
-        ObjectOutputStream os = null;
-        try {
-            os = new ObjectOutputStream(new FileOutputStream(path));
-            os.writeObject(listTaiKhoan);
-            System.out.println("Success...");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            os.close();
-        }
-    }
-
-    private List<TaiKhoan> readFile() throws IOException, ClassNotFoundException {
-        String path = System.getProperty("user.dir") + "\\src\\DATABASE\\account.dat";
-        List<TaiKhoan> listTaiKhoan;
-        ObjectInputStream os = null;
-        try {
-            os = new ObjectInputStream(new FileInputStream(path));
-            listTaiKhoan = (List<TaiKhoan>) os.readObject();
-            return listTaiKhoan;
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        } finally {
-            os.close();
-        }
-    }
-
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        fLogin login = new fLogin();
+    public static void main(String[] args) {
+        fHome h = new fHome();
+        h.setVisible(true);
+        fLogin login = new fLogin(h);
         login.setVisible(true);
-//        TaiKhoan taiKhoan = new TaiKhoan(); // tao doi tuong myStudent
-//        List<TaiKhoan> listTaiKhoan = new ArrayList<>();
-//        TaiKhoan tk1 = new TaiKhoan("admin", "admin");
-//        TaiKhoan tk2 = new TaiKhoan("thang", "1811");
-//
-//        listTaiKhoan.add(tk1);
-//        listTaiKhoan.add(tk2);
-//        login.saveFile(listTaiKhoan);
     }
 }

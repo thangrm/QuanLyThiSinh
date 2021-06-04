@@ -78,6 +78,12 @@ public class ToolBar extends JToolBar {
         updateBtn = new JButton(iconUpdate);
         deleteBtn = new JButton(iconDelete);
         searchBtn = new JButton(iconLoupe);
+        if (!Config.isLogin) {
+            addBtn.setEnabled(false);
+            updateBtn.setEnabled(false);
+            deleteBtn.setEnabled(false);
+        }
+
         this.add(addBtn);
         this.add(updateBtn);
         this.add(deleteBtn);

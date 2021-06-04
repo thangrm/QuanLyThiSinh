@@ -116,8 +116,6 @@ public class fXacNhanXoa extends Dialog {
             public void actionPerformed(ActionEvent e) {
                 home.tuyenSinh.XoaThongTinThiSinh(soBaoDanh);
                 home.tb.removeRowSelected();
-                home.revalidate();
-                home.repaint();
                 dispose();
             }
         });

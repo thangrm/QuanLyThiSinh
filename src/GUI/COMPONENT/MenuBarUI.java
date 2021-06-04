@@ -14,10 +14,10 @@ import ENTITY.ThiSinh;
 import ENTITY.TuyenSinh;
 import GUI.fThemThiSinh;
 import LIB.Config;
-import java.awt.*;
 import java.awt.MenuBar;
 import java.awt.event.*;
 import java.util.Vector;
+import java.awt.*;
 import javax.swing.*;
 
 public class MenuBarUI extends JFrame {
@@ -28,8 +28,9 @@ public class MenuBarUI extends JFrame {
     protected JMenu menuTraCuu = new JMenu("Tra cứu");
     protected JMenu menuThongTin = new JMenu("Thông tin");
     protected JMenuItem menuItemHeThong1 = new JMenuItem("Thêm thí sinh");
-    protected JMenuItem menuItemHeThong2 = new JMenuItem("Đăng xuất");
-    protected JMenuItem menuItemHeThong3 = new JMenuItem("Thoát");
+    protected JMenuItem menuItemHeThong2 = new JMenuItem("Đổi mật khẩu");
+    protected JMenuItem menuItemHeThong3 = new JMenuItem("Đăng nhập");
+    protected JMenuItem menuItemHeThong4 = new JMenuItem("Thoát");
     protected JMenuItem menuItemTraCuu1 = new JMenuItem("Theo SBD");
     protected JMenuItem menuItemThongTin1 = new JMenuItem("Phiên bản");
 
@@ -40,16 +41,26 @@ public class MenuBarUI extends JFrame {
     private void setUI() {
         this.setSize(1200, 600);
         this.getContentPane().setBackground(Config.mainColor);
+        if (Config.isLogin) {
+            menuItemHeThong3.setText("Đăng xuất");
+        }else{
+            menuItemHeThong1.setEnabled(false);
+            menuItemHeThong2.setEnabled(false);
+        }
+            
         menuBar.setBackground(Config.subColor);
+
         //Menu bar
         menuHeThong.setMnemonic('H');
         menuHeThong.setForeground(Config.textSubColor);
         menuItemHeThong1.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        menuItemHeThong2.setAccelerator(KeyStroke.getKeyStroke('L', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        menuItemHeThong3.setAccelerator(KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        menuItemHeThong2.setAccelerator(KeyStroke.getKeyStroke('M', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        menuItemHeThong3.setAccelerator(KeyStroke.getKeyStroke('L', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        menuItemHeThong4.setAccelerator(KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         menuHeThong.add(menuItemHeThong1);
         menuHeThong.add(menuItemHeThong2);
         menuHeThong.add(menuItemHeThong3);
+        menuHeThong.add(menuItemHeThong4);
 
         menuTraCuu.setMnemonic('T');
         menuTraCuu.setForeground(Config.textSubColor);
@@ -71,4 +82,6 @@ public class MenuBarUI extends JFrame {
         MenuBarUI home = new MenuBarUI();
         home.setVisible(true);
     }
+    
+    
 }

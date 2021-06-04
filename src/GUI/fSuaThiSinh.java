@@ -47,8 +47,6 @@ public class fSuaThiSinh extends NhapThongTin {
                 if (messager.equalsIgnoreCase("OK")) {
                     frame.dispose();
                     home.tb.updateTable(tuyenSinh.HienThiMotThiSinh(thiSinh));
-                    home.revalidate();
-                    home.repaint();
                     DialogUI d = new DialogUI(frame, "Thành công", "Sửa thông tin thí sinh thành công!", true, DialogUI.OK);
                     d.setVisible(true);
                 } else if (messager.equalsIgnoreCase("Error")) {

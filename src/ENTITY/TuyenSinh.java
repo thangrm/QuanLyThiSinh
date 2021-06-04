@@ -78,6 +78,8 @@ public class TuyenSinh {
 
     public Vector HienThi() {
         Vector data = new Vector();
+        if(listThiSinh == null)
+            return data;
         for (ThiSinh thiSinh : listThiSinh) {
             Vector row = this.HienThiMotThiSinh(thiSinh);
             data.add(row);
@@ -115,7 +117,8 @@ public class TuyenSinh {
         return messager;
     }
 
-    public void TimKiemTheoSBD() {
+    public void TimKiemTheoTen(String nameFilter) {
+        listThiSinh = SQLServer.getDSThiSinh(nameFilter);
     }
 
     public Vector PhanTichKhuVucThanhVector() {

@@ -6,6 +6,7 @@
 package GUI.COMPONENT;
 
 import GUI.fHome;
+import LIB.Config;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -26,6 +27,12 @@ public class PopupMenuListener extends MouseAdapter {
     JMenuItem item4 = new JMenuItem("Tìm kiếm thí sinh");
 
     public PopupMenuListener(fHome home) {
+        if(!Config.isLogin){
+            item1.setEnabled(false);
+            item2.setEnabled(false);
+            item3.setEnabled(false);
+        }
+        
         menu.add(item1);
         menu.add(item2);
         menu.add(item3);

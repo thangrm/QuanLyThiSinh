@@ -36,7 +36,7 @@ public class SQLServer {
             conn = DriverManager.getConnection(dbURL, userName, password);
             System.out.println("connect successfully!");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            System.out.println("Không kết nối được với database");
         }
         return conn;
     }
@@ -71,22 +71,35 @@ public class SQLServer {
             }
             return null;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            System.out.println("Không lấy được thông tin thí sinh");
+            //ex.printStackTrace();
         }
         return null;
     }
 
     public static List<ThiSinh> getDSThiSinh() {
+        return getDSThiSinh(null);
+    }
+
+    public static List<ThiSinh> getDSThiSinh(String nameFilter) {
         try {
             // connnect to database
             Connection conn = getConnection(DB_URL, USER_NAME, PASSWORD);
             // crate statement
             Statement stmt = conn.createStatement();
-
-            ResultSet rs = stmt.executeQuery("select thisinh.*, khuvuc.DiemUuTien, khoi.tenKhoi "
+            String sql = "select thisinh.*, khuvuc.DiemUuTien, khoi.tenKhoi "
                     + "from thisinh INNER JOIN khoi ON thisinh.maKhoi = khoi.maKhoi "
                     + "INNER JOIN khuvuc ON thisinh.maKhuVuc = khuvuc.maKhuVuc "
-                    + "order by soBaoDanh desc");
+                    + "order by soBaoDanh desc";
+            if (nameFilter != null) {
+                System.out.println("DATABASE.SQLServer.getDSThiSinh()");
+                sql = "select thisinh.*, khuvuc.DiemUuTien, khoi.tenKhoi "
+                    + "from thisinh INNER JOIN khoi ON thisinh.maKhoi = khoi.maKhoi "
+                    + "INNER JOIN khuvuc ON thisinh.maKhuVuc = khuvuc.maKhuVuc "
+                    + "WHERE hoTen LIKE '%"+nameFilter+"%'"
+                    + "order by soBaoDanh desc";
+            }
+            ResultSet rs = stmt.executeQuery(sql);
             List<ThiSinh> listThiSinh = new ArrayList<>();
             while (rs.next()) {
                 String soBaoDanh = rs.getString(1);
@@ -108,7 +121,8 @@ public class SQLServer {
             conn.close();
             return listThiSinh;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            System.out.println("Không lấy được danh sách thí sinh");
+            //ex.printStackTrace();
         }
         return null;
     }
@@ -132,7 +146,8 @@ public class SQLServer {
             conn.close();
             return listDiem;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            System.out.println("Không lấy được điểm thí sinh");
+            //ex.printStackTrace();
         }
         return null;
     }
@@ -156,7 +171,8 @@ public class SQLServer {
             conn.close();
             return listKhoi;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            System.out.println("Không lấy được khối thi");
+            //ex.printStackTrace();
         }
         return null;
     }
@@ -180,7 +196,8 @@ public class SQLServer {
             conn.close();
             return listKhuVuc;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            System.out.println("Không lấy được khu vực thi của thí sinh");
+            //ex.printStackTrace();
         }
         return null;
     }
@@ -224,12 +241,12 @@ public class SQLServer {
         try {
             // connnect to database
             Connection conn = getConnection(DB_URL, USER_NAME, PASSWORD);
-            
+
             // Xóa điểm thi của thi sinh ở khối cũ
             PreparedStatement ps = conn.prepareStatement("DELETE FROM `diemthi` WHERE soBaoDanh = ?");
             ps.setString(1, thisinh.getSoBaoDanh());
             ps.execute();
-            
+
             // Cập nhật lại thông tin thí sinh
             ps = conn.prepareStatement("UPDATE thisinh "
                     + "SET maKhuVuc = ?, "
@@ -243,7 +260,7 @@ public class SQLServer {
             ps.setString(4, thisinh.getDiaChi());
             ps.setString(5, thisinh.getSoBaoDanh());
             ps.execute();
-            
+
             // Cập nhật lại điểm của thí sinh
             for (DiemThi diem : thisinh.getListDiem()) {
                 ps = conn.prepareStatement("INSERT INTO diemthi (`soBaoDanh`, `maMon`, `diem`) "
@@ -257,24 +274,25 @@ public class SQLServer {
             conn.close();
             return "OK";
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            System.out.println("Không sửa được thông tin thí sinh");
 //            if (ex.getMessage().indexOf("Duplicate entry") >= 0) {
 //                return "Duplicate entry";
 //            }
             return "Error";
         }
     }
-    
+
     public static String xoaThiSinh(String soBaoDanh) {
         try {
             // connnect to database
             Connection conn = getConnection(DB_URL, USER_NAME, PASSWORD);
-            
+
             // Xóa điểm thi của thi sinh
             PreparedStatement ps = conn.prepareStatement("DELETE FROM diemthi WHERE soBaoDanh = ?");
             ps.setString(1, soBaoDanh);
             ps.execute();
-            
+
             // Xóa thông tin của thí sinh
             ps = conn.prepareStatement("DELETE FROM thisinh WHERE soBaoDanh = ?");
             ps.setString(1, soBaoDanh);
@@ -283,7 +301,8 @@ public class SQLServer {
             conn.close();
             return "OK";
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            System.out.println("Không xóa được thông tin thí sinh");
             return "Error";
         }
     }
