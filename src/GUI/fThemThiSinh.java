@@ -8,6 +8,7 @@ package GUI;
 import GUI.COMPONENT.NhapThongTin;
 import GUI.COMPONENT.DialogUI;
 import ENTITY.ThiSinh;
+import ENTITY.TuyenSinh;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -20,8 +21,8 @@ public class fThemThiSinh extends NhapThongTin {
     private fThemThiSinh formThemThiSinh;
     private fHome home;
 
-    public fThemThiSinh(fHome home) {
-        super();
+    public fThemThiSinh(fHome home, TuyenSinh tuyensinh) {
+        super(tuyensinh);
         this.formThemThiSinh = this;
         this.home = home;
         this.lblTitle.setText("Thêm thông tin thí sinh mới");

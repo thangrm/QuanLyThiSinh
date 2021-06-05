@@ -9,14 +9,9 @@ package GUI.COMPONENT;
  *
  * @author Hoàng Thắng <hoangthangrm>
  */
-import DATABASE.SQLServer;
-import ENTITY.ThiSinh;
-import ENTITY.TuyenSinh;
+import ENTITY.TaiKhoan;
 import GUI.fThemThiSinh;
 import LIB.Config;
-import java.awt.MenuBar;
-import java.awt.event.*;
-import java.util.Vector;
 import java.awt.*;
 import javax.swing.*;
 
@@ -25,12 +20,15 @@ public class MenuBarUI extends JFrame {
     protected fThemThiSinh formThemThiSinh;
     protected JMenuBar menuBar = new JMenuBar();
     protected JMenu menuHeThong = new JMenu("Hệ thống");
+    protected JMenu menuQuanLy = new JMenu("Quản lý");
     protected JMenu menuTraCuu = new JMenu("Tra cứu");
     protected JMenu menuThongTin = new JMenu("Thông tin");
     protected JMenuItem menuItemHeThong1 = new JMenuItem("Thêm thí sinh");
     protected JMenuItem menuItemHeThong2 = new JMenuItem("Đổi mật khẩu");
     protected JMenuItem menuItemHeThong3 = new JMenuItem("Đăng nhập");
     protected JMenuItem menuItemHeThong4 = new JMenuItem("Thoát");
+    protected JMenuItem menuItemQuanLy1 = new JMenuItem("Quản lý thí sinh");
+    protected JMenuItem menuItemQuanLy2 = new JMenuItem("Quản lý tài khoản");
     protected JMenuItem menuItemTraCuu1 = new JMenuItem("Theo SBD");
     protected JMenuItem menuItemThongTin1 = new JMenuItem("Phiên bản");
 
@@ -43,11 +41,11 @@ public class MenuBarUI extends JFrame {
         this.getContentPane().setBackground(Config.mainColor);
         if (Config.isLogin) {
             menuItemHeThong3.setText("Đăng xuất");
-        }else{
+        } else {
             menuItemHeThong1.setEnabled(false);
             menuItemHeThong2.setEnabled(false);
         }
-            
+
         menuBar.setBackground(Config.subColor);
 
         //Menu bar
@@ -62,6 +60,13 @@ public class MenuBarUI extends JFrame {
         menuHeThong.add(menuItemHeThong3);
         menuHeThong.add(menuItemHeThong4);
 
+        menuQuanLy.setMnemonic('Q');
+        menuQuanLy.setForeground(Config.textSubColor);
+        menuItemQuanLy1.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        menuItemQuanLy2.setAccelerator(KeyStroke.getKeyStroke('U', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        menuQuanLy.add(menuItemQuanLy1);
+        menuQuanLy.add(menuItemQuanLy2);
+
         menuTraCuu.setMnemonic('T');
         menuTraCuu.setForeground(Config.textSubColor);
         menuItemTraCuu1.setAccelerator(KeyStroke.getKeyStroke('F', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -72,6 +77,11 @@ public class MenuBarUI extends JFrame {
         menuThongTin.add(menuItemThongTin1);
 
         menuBar.add(menuHeThong);
+        if (Config.taiKhoan != null) {
+            if (Config.taiKhoan.getRole() == TaiKhoan.ADMIN) {
+                menuBar.add(menuQuanLy);
+            }
+        }
         menuBar.add(menuTraCuu);
         menuBar.add(menuThongTin);
 
@@ -82,6 +92,5 @@ public class MenuBarUI extends JFrame {
         MenuBarUI home = new MenuBarUI();
         home.setVisible(true);
     }
-    
-    
+
 }

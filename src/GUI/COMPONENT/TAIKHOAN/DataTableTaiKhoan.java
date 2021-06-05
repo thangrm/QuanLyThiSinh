@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package GUI.COMPONENT;
+package GUI.COMPONENT.TAIKHOAN;
 
+import GUI.COMPONENT.PopupMenuListener;
 import GUI.fHome;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Panel;
 import java.util.Vector;
 import javax.swing.*;
@@ -17,7 +19,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Hoàng Thắng <hoangthangrm>
  */
-public class DataTable extends Panel {
+public class DataTableTaiKhoan extends Panel {
 
     protected fHome home;
     public JTable table = new JTable() {
@@ -27,38 +29,26 @@ public class DataTable extends Panel {
     };
     public DefaultTableModel model;
 
-    public DataTable(fHome home) {
+    public DataTableTaiKhoan(fHome home) {
         this.home = home;
         Vector data = new Vector();
         setData(data);
         this.add(new JScrollPane(table));
-        table.addMouseListener(new PopupMenuListener(home));
+        table.addMouseListener(new PopupMenuListenerTaiKhoan(home));
     }
 
-    public DataTable(fHome home, Vector data) {
+    public DataTableTaiKhoan(fHome home, Vector data) {
         this.home = home;
         setData(data);
         this.add(new JScrollPane(table));
-        table.addMouseListener(new PopupMenuListener(home));
+        table.addMouseListener(new PopupMenuListenerTaiKhoan(home));
     }
 
     public void setData(Vector data) {
         Vector vctHeader = new Vector();
         vctHeader.add("STT");
-        vctHeader.add("SBD");
-        vctHeader.add("Họ và tên");
-        vctHeader.add("Địa chỉ");
-        vctHeader.add("Khu vực");
-        vctHeader.add("Điểm cộng");
-        vctHeader.add("Khối");
-        vctHeader.add("Toán");
-        vctHeader.add("Lý");
-        vctHeader.add("Hóa");
-        vctHeader.add("Sinh");
-        vctHeader.add("Văn");
-        vctHeader.add("Sử");
-        vctHeader.add("Địa");
-        vctHeader.add("Tổng điểm");
+        vctHeader.add("Tên tai khoản");
+        vctHeader.add("Loại tài khoản");
 
         model = new DefaultTableModel(data, vctHeader);
         while (model.getRowCount() < 25) {
@@ -68,31 +58,13 @@ public class DataTable extends Panel {
         table.setModel(model);
         table.setShowGrid(true);
         table.setGridColor(Color.BLACK);
-        table.setSize(800, 300);
+        table.setPreferredSize(new Dimension(800,400));
         table.setPreferredScrollableViewportSize(table.getPreferredSize());
         table.setFillsViewportHeight(true);
 
-        table.getColumnModel().getColumn(0).setPreferredWidth(35);
-        table.getColumnModel().getColumn(1).setPreferredWidth(120);
-        table.getColumnModel().getColumn(2).setPreferredWidth(200);
-        table.getColumnModel().getColumn(3).setPreferredWidth(220);
-        table.getColumnModel().getColumn(4).setPreferredWidth(80);
-        table.getColumnModel().getColumn(5).setPreferredWidth(110);
-        table.getColumnModel().getColumn(6).setPreferredWidth(60);
-        table.getColumnModel().getColumn(7).setPreferredWidth(38);
-        table.getColumnModel().getColumn(8).setPreferredWidth(38);
-        table.getColumnModel().getColumn(9).setPreferredWidth(38);
-        table.getColumnModel().getColumn(10).setPreferredWidth(38);
-        table.getColumnModel().getColumn(11).setPreferredWidth(38);
-        table.getColumnModel().getColumn(12).setPreferredWidth(38);
-        table.getColumnModel().getColumn(13).setPreferredWidth(38);
-        table.getColumnModel().getColumn(14).setPreferredWidth(80);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
-
-        for (int i = 4; i < 15; i++) {
+        for (int i = 0; i < 3; i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
         this.setSTT();
@@ -125,7 +97,7 @@ public class DataTable extends Panel {
         model.fireTableDataChanged();
         table.revalidate();
         table.repaint();
-        table.addMouseListener(new PopupMenuListener(home));
+        table.addMouseListener(new PopupMenuListenerTaiKhoan(home));
         home.revalidate();
         home.repaint();
     }

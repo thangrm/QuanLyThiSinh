@@ -9,10 +9,12 @@ package GUI;
  *
  * @author Hoàng Thắng <hoangthangrm>
  */
+import ENTITY.QuanLyTaiKhoan;
 import GUI.COMPONENT.DataTable;
 import GUI.COMPONENT.MenuBarUI;
 import GUI.COMPONENT.ToolBar;
 import ENTITY.TuyenSinh;
+import GUI.COMPONENT.TAIKHOAN.DataTableTaiKhoan;
 import GUI.COMPONENT.DialogUI;
 import GUI.COMPONENT.PopupMenuListener;
 import LIB.Config;
@@ -27,10 +29,15 @@ public class fHome extends MenuBarUI {
     protected fSuaThiSinh formSuaThiSinh;
     protected fXacNhanXoa formXacNhanXoa;
     protected fTimKiem formTimKiem;
+    protected fTaoTaiKhoan formTaoTaiKhoan;
+    protected fCapLaiMatKhau formCapLaiMatKhau;
+    protected fXacNhanXoaTaiKhoan formXacNhanXoaTaiKhoan;
 
     protected TuyenSinh tuyenSinh;
     protected DataTable tb;
+    DataTableTaiKhoan tbTaiKhoan;
     protected Panel panel;
+    protected Panel panelSearch;
     protected GridBagLayout layout;
     protected GridBagConstraints gbc;
     protected TextField txtLocTen;
@@ -69,7 +76,7 @@ public class fHome extends MenuBarUI {
         gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.CENTER;
 
-        //Hiển thị bảng danh sách thí sinh
+        //Hiển thị bảng danh sách thí sinh  
         Label lblTimKiem = new Label("Tên: ");
         lblTimKiem.setForeground(Config.textColor);
         lblTimKiem.setFont(new Font("Verdana", Font.PLAIN, 16));
@@ -83,14 +90,21 @@ public class fHome extends MenuBarUI {
         tuyenSinh = new TuyenSinh();
         Vector data = tuyenSinh.HienThi();
         tb = new DataTable(home, data);
-        Panel panelSearch = new Panel();
+        if (Config.qlTaiKhoan == null) {
+            Config.qlTaiKhoan = new QuanLyTaiKhoan();
+        }
+        data = Config.qlTaiKhoan.HienThi();
+        tbTaiKhoan = new DataTableTaiKhoan(home,data);
+        tbTaiKhoan.setVisible(false);
 
+        panelSearch = new Panel();
         addComponent(panelSearch, lblTimKiem, 0, 0, 1, 1, inset);
         addComponent(panelSearch, txtLocTen, 1, 0, 1, 1, inset);
         addComponent(panelSearch, btnLocTen, 2, 0, 1, 1, inset);
         inset = new Insets(0, 0, 0, 0);
         addComponent(panel, panelSearch, 0, 0, 1, 1, inset);
         addComponent(panel, tb, 0, 1, 1, 1, inset);
+        addComponent(panel, tbTaiKhoan, 0, 2, 1, 1, inset);
         mainPanel.add(panel, BorderLayout.SOUTH);
         this.add(mainPanel);
 
@@ -114,11 +128,35 @@ public class fHome extends MenuBarUI {
                 dispose();
             }
         });
-        
+
         /*====================*/
-        /*===== MENU BAR =====*/
-        /*====================*/
-        
+ /*===== MENU BAR =====*/
+ /*====================*/
+        //Sự kiện quản lý thí sinh
+        menuItemQuanLy1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelSearch.setVisible(true);
+                tb.setVisible(true);
+                tbTaiKhoan.setVisible(false);
+                home.revalidate();
+                home.repaint();
+
+            }
+        });
+
+        // Sự kiện quản lý tài khoản
+        menuItemQuanLy2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelSearch.setVisible(false);
+                tb.setVisible(false);
+                tbTaiKhoan.setVisible(true);
+                home.revalidate();
+                home.repaint();
+            }
+        });
+
         // Sự kiện thêm mới trên menuBar
         menuItemHeThong1.addActionListener(new ActionListener() {
             @Override
@@ -126,7 +164,7 @@ public class fHome extends MenuBarUI {
                 themThiSinh();
             }
         });
-        
+
         // Sự kiện đổi mật khẩu
         menuItemHeThong2.addActionListener(new ActionListener() {
             @Override
@@ -135,7 +173,7 @@ public class fHome extends MenuBarUI {
                 formDoiMatKhau.setVisible(true);
             }
         });
-        
+
         // Sự kiện đăng nhập - đăng xuất
         menuItemHeThong3.addActionListener(new ActionListener() {
             @Override
@@ -173,11 +211,10 @@ public class fHome extends MenuBarUI {
                 d.setVisible(true);
             }
         });
-        
+
         /*=========================*/
-        /*===== THANH CÔNG CỤ =====*/
-        /*=========================*/
-        
+ /*===== THANH CÔNG CỤ =====*/
+ /*=========================*/
         // Sự kiện nút thêm mới trên thanh công cụ
         toolBar.addBtn.addActionListener(new ActionListener() {
             @Override
@@ -223,9 +260,13 @@ public class fHome extends MenuBarUI {
         });
     }
 
+    public void hienThiBangThiSinh() {
+
+    }
+
     public void themThiSinh() {
         if (formThemThiSinh == null) {
-            formThemThiSinh = new fThemThiSinh(home);
+            formThemThiSinh = new fThemThiSinh(home,tuyenSinh);
             formThemThiSinh.setVisible(true);
         } else {
             formThemThiSinh.resetData();
@@ -276,7 +317,50 @@ public class fHome extends MenuBarUI {
         formTimKiem = new fTimKiem(home);
         formTimKiem.setVisible(true);
     }
-
+    
+    public void taoTaiKhoan() {
+        if (formTaoTaiKhoan == null) {
+            formTaoTaiKhoan = new fTaoTaiKhoan(home);
+            formTaoTaiKhoan.setVisible(true);
+        } else {
+            formTaoTaiKhoan.resetData();
+            formTaoTaiKhoan.setVisible(true);
+            formTaoTaiKhoan.toFront();
+        }
+    }
+    
+    public void capLaiMatKhau() {
+        int row = tbTaiKhoan.table.getSelectedRow();
+        if (row < 0) {
+            return;
+        }
+        if (tbTaiKhoan.table.getValueAt(row, 1) == null) {
+            return;
+        }
+        String username = tbTaiKhoan.table.getValueAt(row, 1).toString();
+        if (username == null || username.equals("")) {
+            return;
+        }
+        formCapLaiMatKhau = new fCapLaiMatKhau(home, username);
+        formCapLaiMatKhau.setVisible(true);
+    }
+    
+    public void xoaTaiKhoan() {
+        int row = tbTaiKhoan.table.getSelectedRow();
+        if (row < 0) {
+            return;
+        }
+        if (tbTaiKhoan.table.getValueAt(row, 1) == null) {
+            return;
+        }
+        String username = tbTaiKhoan.table.getValueAt(row, 1).toString();
+        if (username == null || username.equals("")) {
+            return;
+        }
+        formXacNhanXoaTaiKhoan = new fXacNhanXoaTaiKhoan(home, username);
+        formXacNhanXoaTaiKhoan.setVisible(true);
+    }
+    
     private void addComponent(Panel panel, Component component, int column,
             int row, int width, int height, Insets inset) {
         gbc.gridx = column;

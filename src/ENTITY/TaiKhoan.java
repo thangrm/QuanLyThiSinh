@@ -11,18 +11,24 @@ import java.io.Serializable;
  *
  * @author Hoàng Thắng <hoangthangrm>
  */
-public class TaiKhoan implements Serializable{
+public class TaiKhoan implements Serializable {
+
+    public static int ADMIN = 1;
+    public static int MANAGER = 2;
+
     protected String username;
     protected String password;
-    
-    public TaiKhoan(){
+    protected int role;
+
+    public TaiKhoan() {
         this.username = null;
         this.password = null;
     }
-    
-    public TaiKhoan(String username, String password) {
+
+    public TaiKhoan(String username, String password, int role) {
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
     public String getUsername() {
@@ -33,6 +39,10 @@ public class TaiKhoan implements Serializable{
         return password;
     }
 
+    public int getRole() {
+        return role;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -40,5 +50,9 @@ public class TaiKhoan implements Serializable{
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
+    public void setRole(int role) {
+        this.role = role;
+    }
+
 }

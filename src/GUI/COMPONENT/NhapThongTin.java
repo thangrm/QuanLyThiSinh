@@ -5,9 +5,6 @@
  */
 package GUI.COMPONENT;
 
-import GUI.COMPONENT.DialogUI;
-import GUI.COMPONENT.ComboBoxUI;
-import DATABASE.SQLServer;
 import ENTITY.DiemThi;
 import ENTITY.Khoi;
 import ENTITY.KhuVuc;
@@ -16,9 +13,7 @@ import ENTITY.TuyenSinh;
 import GUI.fHome;
 import GUI.fSuaThiSinh;
 import LIB.Config;
-import java.awt.BorderLayout;
 import java.awt.Button;
-import java.awt.Dialog;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -92,8 +87,8 @@ public class NhapThongTin extends Frame {
     }
 
     public NhapThongTin(TuyenSinh tuyenSinh) {
-        this.frame = this;
         this.tuyenSinh = tuyenSinh;
+        this.frame = this;
         setUI();
         setEvent();
     }

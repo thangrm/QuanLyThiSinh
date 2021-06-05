@@ -14,7 +14,6 @@ import ENTITY.TaiKhoan;
 import GUI.COMPONENT.DialogUI;
 import LIB.Config;
 import java.awt.*;
-import java.util.List;
 import java.awt.event.*;
 
 public class fLogin extends Frame {
